@@ -1,29 +1,31 @@
 ﻿var app = app || {};
 
-app.TodoCollection = Backbone.Collection.extend({
+(function () {
 
-    //reference to of the todo-model
-    model: app.Model,
+    app.TodoCollection = Backbone.Collection.extend({
 
-    localStorage: new Backbone.LocalStorage("todos-storage"),
+        //reference to of the todo-model
+        model: app.Todo,
 
-    completed: function () {
-        return this.filter(function (todo) {
-            return todo.get('completed');
-        })
-    },
+        localStorage: new Backbone.LocalStorage("todos-storage"),
 
-    remaining: function () {
-        return this.without.apply(this,this.completed());
-    },
+        completed: function () {
+            return this.where({ completed: true });
+        },
 
-    nextOrder: function () {
-        if (!this.length)
-            return 1;
-        return this.last().get('order') + 1;
-    },
+        remaining: function () {
+            return this.without.apply(this, this.completed());
+        },
 
-    comparator: function (todo) {
-        return todo.get('order');
-    }
-});
+        nextOrder: function () {
+            if (!this.length)
+                return 1;
+            return this.last().get('order') + 1;
+        },
+
+        comparator: 'order'
+    });
+
+    app.Todos = new app.TodoCollection();
+
+})();

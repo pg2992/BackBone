@@ -6,16 +6,16 @@
 <head runat="server">
     <title></title>
     <link rel="stylesheet" href="dist/css/base.css"? />
-    <link rel="stylesheet" href="dist/css/bootstrap.css" />
+    <%--<link rel="stylesheet" href="dist/css/bootstrap.css" />--%>
     <script type="text/javascript" src="Js/Library/jquery-2.1.1.js"></script>
+    <script type="text/javascript" src="Js/library/Underscore-1.7.0.js"></script>
     <script type="text/javascript" src="Js/Library/Backbone-1.1.2.js"></script>
     <script type="text/javascript" src="Js/Library/Backbone-LocalStorage.js"></script>
-    <script type="text/javascript" src="Js/library/Underscore-1.7.0.js"></script>
     <script type="text/javascript" src="Js/Library/handlebars-v2.0.0.js"></script>
 </head>
 <body>
     <div>
-        <section id="todoapp jappHolder">
+        <section id="jappHolder">
             <header id="header">
                 <h1>todos</h1>
                 <input id="new-todo" placeholder="What needs to be done?" autofocus />
@@ -59,6 +59,13 @@
         <button id="clear-completed">Clear completed {{completed}}</button>
         {{/if}}
     </script>
+
+    <script type="text/javascript" src="Js/TodoList/Model/Model.js"></script>
+    <script type="text/javascript" src="Js/TodoList/Collection/Collection.js"></script>
+    <script type="text/javascript" src="Js/TodoList/Views/TodoView.js"></script>
+    <script type="text/javascript" src="Js/TodoList/Views/AppView.js"></script>
+    <script type="text/javascript" src="Js/TodoList/Router/Router.js"></script>
+    <script type="text/javascript" src="Js/TodoList/Start.js"></script>
 </body>
 
 </html>

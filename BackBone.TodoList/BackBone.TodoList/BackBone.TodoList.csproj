@@ -71,7 +71,9 @@
     <Content Include="Js\Library\Underscore-1.70.0.js" />
     <Content Include="Js\TodoList\Collection\Collection.js" />
     <Content Include="Js\TodoList\Model\Model.js" />
+    <Content Include="Js\TodoList\Start.js" />
     <Content Include="Js\TodoList\Views\AppView.js" />
+    <Content Include="Js\TodoList\Views\TodoView.js" />
     <Content Include="TodoList.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
