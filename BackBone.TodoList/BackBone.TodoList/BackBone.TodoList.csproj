@@ -68,9 +68,10 @@
     <Content Include="Js\Library\Backbone-LocalStorage.js" />
     <Content Include="Js\Library\handlebars-v2.0.0.js" />
     <Content Include="Js\Library\jquery-2.1.1.js" />
-    <Content Include="Js\Library\Underscore-1.70.0.js" />
+    <Content Include="Js\Library\Underscore-1.7.0.js" />
     <Content Include="Js\TodoList\Collection\Collection.js" />
     <Content Include="Js\TodoList\Model\Model.js" />
+    <Content Include="Js\TodoList\Router\Router.js" />
     <Content Include="Js\TodoList\Start.js" />
     <Content Include="Js\TodoList\Views\AppView.js" />
     <Content Include="Js\TodoList\Views\TodoView.js" />
@@ -101,9 +102,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Js\TodoList\Router\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -1,42 +1,58 @@
-﻿var app = app || {};
+﻿/*global Backbone, jQuery, _, ENTER_KEY */
+var app = app || {};
 
-(function () {
+(function ($) {
+    'use strict';
 
+    // The Application
+    // ---------------
+
+    // Our overall **AppView** is the top-level piece of UI.
     app.AppView = Backbone.View.extend({
 
-        //holds the holder of the view
-        el: "#jappHolder",
+        // Instead of generating a new element, bind to the existing skeleton of
+        // the App already present in the HTML.
+        el: '#jappHolder',
 
-        statsTemplate: Handlebars.compile($("#todo-footer-stats").html()),
+        // Our template for the line of statistics at the bottom of the app.
+        statsTemplate: Handlebars.compile($('#stats-template').html()),
 
+        // Delegated events for creating new items, and clearing completed ones.
         events: {
-            "keypress #new-todo": 'createOnEnter',
-            "click #clear-completed": 'clearCompleted',
-            "click #toggle-all": 'toggleAllCompleted'
+            'keypress #new-todo': 'createOnEnter',
+            'click #clear-completed': 'clearCompleted',
+            'click #toggle-all': 'toggleAllComplete'
         },
 
+        // At initialization we bind to the relevant events on the `Todos`
+        // collection, when items are added or changed. Kick things off by
+        // loading any preexisting todos that might be saved in *localStorage*.
         initialize: function () {
             this.allCheckbox = this.$('#toggle-all')[0];
             this.$input = this.$('#new-todo');
             this.$footer = this.$('#footer');
             this.$main = this.$('#main');
-            this.$todoList = this.$('#todo-list');
-            this.listenTo(app.Todos, 'add', this.addOne);
-            this.listenTo(app.Todos, 'reset', this.addAll);
+            this.$list = $('#todo-list');
 
-            this.listenTo(app.Todos, 'change:complete', this.filterOne);
-            this.listenTo(app.Todos, 'filter', this.filter);
-            this.listenTo(app.Todos, 'all', this.render);
+            this.listenTo(app.todos, 'add', this.addOne);
+            this.listenTo(app.todos, 'reset', this.addAll);
+            this.listenTo(app.todos, 'change:completed', this.filterOne);
+            this.listenTo(app.todos, 'filter', this.filterAll);
+            this.listenTo(app.todos, 'all', this.render);
 
-            app.Todos.fetch();
+            // Suppresses 'add' events with {reset: true} and prevents the app view
+            // from being re-rendered for every model. Only renders when the 'reset'
+            // event is triggered at the end of the fetch.
+            app.todos.fetch({ reset: true });
         },
 
-        //to refresh the view this render function will into the existence
+        // Re-rendering the App just means refreshing the statistics -- the rest
+        // of the app doesn't change.
         render: function () {
-            var completed = app.Todos.completed().length;
-            var remaining = app.Todos.remaining().length;
+            var completed = app.todos.completed().length;
+            var remaining = app.todos.remaining().length;
 
-            if (app.Todos.length) {
+            if (app.todos.length) {
                 this.$main.show();
                 this.$footer.show();
 
@@ -44,30 +60,30 @@
                     completed: completed,
                     remaining: remaining
                 }));
-                this.$("#filter li a").removeClass("selected").filter('[href="#/' + (app.TodoFilter || '') + '"]').addClass("selected");
 
+                this.$('#filters li a')
+					.removeClass('selected')
+					.filter('[href="#/' + (app.TodoFilter || '') + '"]')
+					.addClass('selected');
             } else {
                 this.$main.hide();
                 this.$footer.hide();
             }
+
             this.allCheckbox.checked = !remaining;
-
-            //helps in chaining of events --- by the way if nothing is returned automatically function returns the object calling it
-            return this;
-
         },
 
-        //add single todo in the list
+        // Add a single todo item to the list by creating a view for it, and
+        // appending its element to the `<ul>`.
         addOne: function (todo) {
             var view = new app.TodoView({ model: todo });
-            $("#todo-list").append(view.render().el);
+            this.$list.append(view.render().el);
         },
 
-        //to add all the todos in the collection
-        //right now dont its use but will figure out soon
+        // Add all items in the **Todos** collection at once.
         addAll: function () {
-            this.$("#todo-list").html('');
-            app.Todos.each(this.addOne, this);
+            this.$list.html('');
+            app.todos.each(this.addOne, this);
         },
 
         filterOne: function (todo) {
@@ -78,36 +94,38 @@
             app.todos.each(this.filterOne, this);
         },
 
-        // new attributes for the todo item
+        // Generate the attributes for a new Todo item.
         newAttributes: function () {
             return {
                 title: this.$input.val().trim(),
-                completed: false,
-                order: app.Todos.nextOrder()
+                order: app.todos.nextOrder(),
+                completed: false
+            };
+        },
+
+        // If you hit return in the main input field, create new **Todo** model,
+        // persisting it to *localStorage*.
+        createOnEnter: function (e) {
+            if (e.which === ENTER_KEY && this.$input.val().trim()) {
+                app.todos.create(this.newAttributes());
+                this.$input.val('');
             }
         },
 
-        createOnEnter: function (event) {
-            if (event.which !== ENTER_KEY || !this.$input.val().trim()) {
-                return;
-            }
-            app.Todos.create(this.newAttributes());
-            this.$input.val('');
-        },
-
-        clearComplete: function () {
-            _.invoke(app.Todos.completed(), 'destroy');
+        // Clear all completed todo items, destroying their models.
+        clearCompleted: function () {
+            _.invoke(app.todos.completed(), 'destroy');
             return false;
         },
 
         toggleAllComplete: function () {
             var completed = this.allCheckbox.checked;
-            app.Todos.each(function (todo) {
+
+            app.todos.each(function (todo) {
                 todo.save({
-                    'completed': completed
+                    completed: completed
                 });
             });
         }
-
     });
-})();
+})(jQuery);

@@ -31,7 +31,7 @@
             <p>Double-click to edit a todo</p>
         </div>
     </div>
-    <script type="text/html" id="todo-task-item">
+    <script type="text/html" id="item-template">
         <div class="view">
             <input class="toggle" type="checkbox" {{#if completed}}"checked"{{else}}{{/if}}>
             <label>{{title}}</label>
@@ -40,7 +40,7 @@
         <input class="edit" value="{{destroy}}">
     </script>
 
-    <script type="text/html" id="todo-footer-stats">
+    <script type="text/html" id="stats-template">
         <span id="todo-count">
             <strong>{{remaining}}</strong>item(s) left
         </span>
