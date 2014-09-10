@@ -9,18 +9,19 @@
 </head>
 <body>
     <div>
-        <p>
-            Enter your Name:<input type="text" data-bind="value:name" />
-        </p>
-        <p>
-            You entered  <strong data-bind="text:name().toUpperCase()"></strong>
-        </p>            
+        <name-editor></name-editor>
+        <name-editor></name-editor>
+        <name-editor></name-editor>
 
         <script>
-            var viewModel = {
-                name:ko.observable('something')
-            }
-            ko.applyBindings(viewModel);
+            ko.components.register('name-editor', {
+        
+                template:"<p>Enter your Name:<input type='text' data-bind='value:name' /></p><p>You entered  <strong data-bind='text:name().toUpperCase()'></strong></p>",
+                viewModel: function(){
+                    this.name = ko.observable('something');
+                }
+            });
+            ko.applyBindings();
         </script>
     </div>
 </body>
